@@ -7,7 +7,11 @@ class IMUHandler:
         self.imu_com = serial.Serial(serial_port, 115200, timeout=1)
 
     def read_raw(self):
-        raw = self.imu_com.readline()
+        raw = None
+        try:
+            raw = self.imu_com.readline()
+        except serial.SerialException:
+            print("Data not Received")
         return raw
 
     def read_data(self):
@@ -20,7 +24,7 @@ class IMUHandler:
             split = decoded.split(', ')
         return split
 
-    def parse_imu(self):
+    def parse_data(self):
         return
 
 
