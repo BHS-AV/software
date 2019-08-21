@@ -27,12 +27,10 @@ class MOTOR:
 
     def __init__(self, serialConnection):
 
-        # Uncomment this for the actual program, it is just commented so I can test.
         self.FSESC = serialConnection
 
-        # Current: the current applied to the motor
+
         self.current = 0
-        # Duty Cycle: Controlling work load without accounting for current
         self.dutyCycle = 0
         self.brake = 0
 
@@ -50,8 +48,7 @@ class MOTOR:
             self.currentTime = time.time()
             if (self.previousTime != self.currentTime):
 
-                # Fixes conflicting commands
-                # Priortize brake then current then duty cycle
+                # Only one value is applied at a time to avoid damaging motor
                 if (self.brake != 0):
                     print("Brake: ", self.brake)
                     self.FSESC.write(self.brakePacket(self.brake))
@@ -84,8 +81,12 @@ class MOTOR:
         packet = pyvesc.encode(message)
         return packet
 
-    def speed_handle(self, value):
+    def set_Current(self, value):
         self.current = value
+        pass
+
+    def set_DutyHandle(self, value):
+        self.dutyCycle = value
         pass
 
     def kill(self):

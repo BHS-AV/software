@@ -32,5 +32,5 @@ class SERVO:
         pass
 
 def main():
-    servo = SERVO()
+    servo = SERVO(serial.Serial('/dev/tty.usbmodem3011',115200,timeout = 0.1))
     servo.set_Steering(10)
