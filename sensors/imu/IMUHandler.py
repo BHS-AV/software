@@ -24,7 +24,8 @@ class IMUHandler:
             split = decoded.split(', ')
         return split
 
-    def parse_data(self):
+    def parse_data(self, data):
+
         return
 
 
