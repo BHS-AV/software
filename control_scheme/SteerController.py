@@ -8,18 +8,18 @@ August 21st 2019
 import pyvesc
 import serial
 
-class SERVO:
+class Servo:
 
-    def __init__(self, serialConnection):
+    def __init__(self, serial_Connection):
 
-        self.FSESC = serialConnection
+        self.FSESC = serial_Connection
 
         self.position = 0
         pass
 
 
 
-    def buildPositionPacket(self, value):
+    def build_Position_Packet(self, value):
 
         message = pyvesc.SetPosition(value)
         packet = pyvesc.encode(message)
@@ -28,9 +28,9 @@ class SERVO:
     def set_Steering(self, value):
 
         self.position = value
-        self.FSESC.write(self.buildPositionPacket(self.position))
+        self.FSESC.write(self.build_Position_Packet(self.position))
         pass
 
 def main():
-    servo = SERVO(serial.Serial('/dev/tty.usbmodem3011',115200,timeout = 0.1))
+    servo = Servo(serial.Serial('/dev/tty.usbmodem3011', 115200, timeout = 0.1))
     servo.set_Steering(10)

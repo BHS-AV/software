@@ -4,13 +4,12 @@ Benjamin S. Bussell
 August 21st 2019
 '''
 
-
-from threading import Thread
-import pyvesc
-import serial
-
 # TODO: DONT LET THIS IMPORT SURVIVE TESTING
 import time
+from threading import Thread
+
+import pyvesc
+import serial
 
 
 # This allows the run function to quietly run in the background.
@@ -23,21 +22,20 @@ def threaded(fn):
     return wrapper
 
 
-class MOTOR:
+class Motor:
 
-    def __init__(self, serialConnection):
+    def __init__(self, serial_Connection):
 
-        self.FSESC = serialConnection
-
+        self.FSESC = serial_Connection
 
         self.current = 0
-        self.dutyCycle = 0
+        self.duty_Cycle = 0
         self.brake = 0
 
         self.active = True
 
-        self.currentTime = time.time()
-        self.previousTime = time.time()
+        self.current_Time = time.time()
+        self.previous_Time = time.time()
 
         pass
 
@@ -45,37 +43,36 @@ class MOTOR:
     def run(self):
         while self.active:
 
-            self.currentTime = time.time()
-            if (self.previousTime != self.currentTime):
+            self.current_Time = time.time()
+            if (self.previous_Time != self.current_Time):
 
                 # Only one value is applied at a time to avoid damaging motor
                 if (self.brake != 0):
                     print("Brake: ", self.brake)
-                    self.FSESC.write(self.brakePacket(self.brake))
+                    self.FSESC.write(self.brake_Packet(self.brake))
                 elif (self.current != 0):
                     print("Current: ", self.current)
-                    self.FSESC.write(self.currentPacket(self.current))
+                    self.FSESC.write(self.current_Packet(self.current))
                 elif (self.dutyCycle != 0):
                     print("Duty Cycle: ", self.dutyCycle)
-                    self.FSESC.write(self.dutyCyclePacket(self.dutyCycle))
+                    self.FSESC.write(self.duty_Cycle_Packet(self.dutyCycle))
                 self.FSESC.flush()
 
+                self.previous_Time = time.time()
 
-                self.previousTime = time.time()
-
-    def dutyCyclePacket(self, value) -> bytes:
+    def duty_Cycle_Packet(self, value) -> bytes:
 
         message = pyvesc.SetDutyCycle(value)
         packet = pyvesc.encode(message)
         return packet
 
-    def currentPacket(self, value) -> bytes:
+    def current_Packet(self, value) -> bytes:
 
         message = pyvesc.SetCurrent(value)
         packet = pyvesc.encode(message)
         return packet
 
-    def brakePacket(self, value) -> bytes:
+    def brake_Packet(self, value) -> bytes:
 
         message = pyvesc.SetCurrentBrake(value)
         packet = pyvesc.encode(message)
@@ -85,7 +82,7 @@ class MOTOR:
         self.current = value
         pass
 
-    def set_DutyHandle(self, value):
+    def set_Duty_Handle(self, value):
         self.dutyCycle = value
         pass
 
@@ -95,9 +92,8 @@ class MOTOR:
 
 
 def main():
-
-    macbookPort = serial.Serial('/dev/tty.usbmodem3011',115200,timeout = 0.1)
-    speed = MOTOR(macbookPort)
+    macbook_Port = serial.Serial('/dev/tty.usbmodem3011', 115200, timeout=0.1)
+    speed = Motor(macbook_Port)
     loop = speed.run()
     speed.speed_handle(0)
     time.sleep(5)
