@@ -53,9 +53,9 @@ class Motor:
                 elif (self.current != 0):
                     print("Current: ", self.current)
                     self.FSESC.write(self.current_Packet(self.current))
-                elif (self.dutyCycle != 0):
-                    print("Duty Cycle: ", self.dutyCycle)
-                    self.FSESC.write(self.duty_Cycle_Packet(self.dutyCycle))
+                elif (self.duty_Cycle != 0):
+                    print("Duty Cycle: ", self.duty_Cycle)
+                    self.FSESC.write(self.duty_Cycle_Packet(self.duty_Cycle))
                 self.FSESC.flush()
 
                 self.previous_Time = time.time()
@@ -83,7 +83,7 @@ class Motor:
         pass
 
     def set_Duty_Handle(self, value):
-        self.dutyCycle = value
+        self.duty_Cycle = value
         pass
 
     def kill(self):
@@ -91,16 +91,3 @@ class Motor:
         pass
 
 
-def main():
-    macbook_Port = serial.Serial('/dev/tty.usbmodem3011', 115200, timeout=0.1)
-    speed = Motor(macbook_Port)
-    loop = speed.run()
-    speed.speed_handle(0)
-    time.sleep(5)
-    speed.speed_handle(2700)
-    time.sleep(15)
-    speed.kill()
-
-
-if __name__ == "__main__":
-    main()
