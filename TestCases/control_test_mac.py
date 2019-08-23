@@ -7,12 +7,12 @@ import time
 
 def main():
 
-    macbook_Port = serial.Serial('/dev/tty.usbmodem3011', 115200, timeout=0.1)
+    port = serial.Serial('COM8', 115200, timeout=0.1)
 
-    motor = Motor(macbook_Port)
-    servo = Servo(macbook_Port)
+    motor = Motor(port)
+    servo = Servo(port)
 
-    loop = Motor.run()
+    loop = motor.run()
 
     motor.set_Current(2900)
     servo.set_Steering(30)
@@ -22,8 +22,7 @@ def main():
     motor.kill()
     servo.kill()
 
-    loop.join()
-    pass
+    return
 
 if __name__ == "__main__":
     main()
