@@ -1,14 +1,13 @@
 
 from control_scheme.SpeedController import Motor
 from control_scheme.SteerController import Servo
-
-from test_cases.serial_port_picker import select_Port
+import serial
 
 import time
 
 def main():
 
-    port = select_Port()
+    port = serial.Serial('COM8', 115200, timeout=0.1)
 
     motor = Motor(port)
     servo = Servo(port)
@@ -16,7 +15,7 @@ def main():
     loop = motor.run()
 
     motor.set_Current(2900)
-    servo.set_Steering(100)
+    servo.set_Steering(30)
 
     time.sleep(5)
 
