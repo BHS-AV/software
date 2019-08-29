@@ -4,13 +4,11 @@ Benjamin S. Bussell
 August 21st 2019
 '''
 
-# TODO: DONT LET THIS IMPORT SURVIVE TESTING
-
 from threading import Thread
 
 import pyvesc
+import time
 import serial
-
 
 # This allows the run function to quietly run in the background.
 def threaded(fn):
@@ -26,7 +24,7 @@ class Motor:
 
     def __init__(self, serial_Connection):
 
-        self.FSESC = serial_Connection
+        self.FSESC = serial.Serial(serial_Connection, 115200, timeout=0.1)
 
         self.current_Goal = 0
         self.current = 0
