@@ -4,30 +4,45 @@ Benjamin S. Bussell
 August 21st 2019
 '''
 
-import pyvesc
+
 import serial
+import pyfirmata
+from threading import Thread
+
+# Working to find a PWM Output devices pray its not an arduino...
+
 
 
 class Servo:
 
     def __init__(self, serial_Connection):
-        self.FSESC = serial_Connection
 
-        self.position = 0
-        pass
+
+        self.board = pyfirmata.ArduinoNano(serial_Connection)
+        self.board.servo_config(10,  90)
+
+
+
+        self.position = 90
+        self.board.digital[10].write(self.position)
+
+
+
+
 
     def build_Position_Packet(self, value):
-        message = pyvesc.SetPosition(value)
-        packet = pyvesc.encode(message)
-        return packet
+        pass
+        #return packet
 
     def set_Steering(self, value):
+
+
         self.position = value
-        self.FSESC.write(self.build_Position_Packet(self.position))
+        self.board.digital[10].write(self.position)
         pass
 
     def kill(self):
-        self.position = 0
-        self.FSESC.write(self.build_Position_Packet(self.position))
+        self.position = 90
+
 
 
