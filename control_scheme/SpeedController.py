@@ -5,7 +5,7 @@ August 21st 2019
 '''
 
 # TODO: DONT LET THIS IMPORT SURVIVE TESTING
-import time
+
 from threading import Thread
 
 import pyvesc
@@ -66,6 +66,9 @@ class Motor:
 
 
                 # Only one value is applied at a time to avoid damaging motor
+                # We need to figure out how we want this code to work...
+
+                # What if we completly removed duty cycle?
                 if (self.brake != 0):
 
                     if (abs(brake_Error) > self.delta):
