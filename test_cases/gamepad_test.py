@@ -6,12 +6,14 @@ import time
 
 
 class Gamepad(object):
-    def __init__(self, gamepad=None):
+    def __init__(self, motor, servo, gamepad=None):
         self.btn_states = {}
         self.old_btn_states = {}
         self.abs_states = {}
         self.old_abs_states = {}
         self.gamepad = gamepad
+        self.motor = motor
+        self.servo = servo
         if not gamepad:
             self.init_gamepad()
         self._misc = 0
@@ -23,17 +25,17 @@ class Gamepad(object):
             raise inputs.UnpluggedError("Gamepad not found.")
 
     # Handles all incoming events from inputs
-    def process_all_events(self, var):
+    def process_all_events(self):
         # process all gamepad events, calling process_gamepad_event for each
         try:
             events = self.gamepad.read()
         except EOFError:
             events = []
         for event in events:
-            self.process_gamepad_event(self.gamepad, event, var)
+            self.process_gamepad_event(self.gamepad, event)
 
     # Proccess gamepad event
-    def process_gamepad_event(self, gamepad, event, var):
+    def process_gamepad_event(self, gamepad, event):
         # Process gamepad event. Assign to handlers after parsing
         if event.ev_type == 'Sync' or event.ev_type == 'Misc':
             self.handle_unknown_event(event)
@@ -41,16 +43,33 @@ class Gamepad(object):
         if event.ev_type == 'Key':
             self.handle_button_event(event)
         if event.ev_type == 'Absolute':
-            self.handle_joystick_event(event, var)
+            self.handle_joystick_event(event)
 
     # Handles joyStick Command with CommandMap
-    def handle_joystick_event(self, jsEvent, var):
-        var = int((jsEvent.state / 255 * 2000) + 2500)
-        return int(var)
+    def handle_joystick_event(self, js_event):
+        state = js_event.state
+        if js_event.code == 'ABS_RZ':
+            if state != 0:
+                var = int((state / 255 * 4000) + 4000)
+            else:
+                var = 0
+        elif js_event.code == 'ABS_Z':
+            if state != 0:
+                var = -int((state / 255 * 4000) + 4000)
+            else:
+                var = 0
+        else:
+            var = 0
+        self.motor.set_Current(var)
+        var = 0
+        # vprint (js_event.code)
+        print(js_event.state)
+        #print(var)
+        return
 
     # Handles button command with CommandMap
-    def handle_button_event(self, btnEvent):
-        print(btnEvent)
+    def handle_button_event(self, btn_event):
+        print(btn_event)
         return
 
     # Handle an Unknown Event
@@ -59,26 +78,12 @@ class Gamepad(object):
         return
 
 
-def main():
-    com = serial.Serial('COM8', 115200, timeout=0.1)
-
-    motor = Motor(com)
-    servo = Servo(com)
-
-    gamepad = Gamepad()
-
+if __name__ == '__main__':
+    port = serial.Serial('COM8', 115200, timeout=0.1)
+    motor = Motor(port)
+    servo = Servo(port)
     loop = motor.run()
-
-    motor.set_Current(2500)
-    servo.set_Steering(30)
-    gamepad = inputs.devices.gamepads[0]
-    var = 2500
+    #motor.set_Current(4000)
+    gamepad = Gamepad(motor, servo)
     while 1:
-        event = gamepad.read()
-
-    motor.kill()
-    servo.kill()
-
-
-if __name__ == "__main__":
-    main()
+        gamepad.process_all_events()
