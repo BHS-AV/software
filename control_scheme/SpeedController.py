@@ -67,7 +67,7 @@ class Motor:
                 # We need to figure out how we want this code to work...
 
                 # What if we completly removed duty cycle?
-                if (self.brake != 0):
+                if (self.brake_Goal != 0):
 
                     if (abs(brake_Error) > self.delta):
                         self.brake += self.delta * brake_Sign
@@ -76,7 +76,7 @@ class Motor:
 
                     print("Brake: ", self.brake)
                     self.FSESC.write(self.brake_Packet(self.brake))
-                elif (self.current != 0):
+                elif (self.current_Goal != 0):
 
                     if (abs(current_Error) > self.delta):
                         self.current += self.delta * current_Sign
@@ -85,7 +85,7 @@ class Motor:
 
                     print("Current: ", self.current)
                     self.FSESC.write(self.current_Packet(self.current))
-                elif (self.duty_Cycle != 0):
+                elif (self.duty_Cycle_Goal != 0):
 
                     if (abs(duty_Cycle_Error) > self.delta):
                         self.duty_Cycle += self.delta * duty_Cycle_Sign
