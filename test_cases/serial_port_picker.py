@@ -18,5 +18,3 @@ def select_Port():
             print("Invalid input")
 
     return str(ports[selected][0])
-
-print(select_Port())
