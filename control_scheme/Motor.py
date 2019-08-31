@@ -1,14 +1,15 @@
 '''
+
 Motor.py
 Benjamin S. Bussell
 August 21st 2019
+
 '''
 
 from threading import Thread
 
 import pyvesc
 import time
-import serial
 
 
 # This allows the run function to quietly run in the background.
@@ -23,9 +24,9 @@ def threaded(fn):
 
 class Motor:
 
-    def __init__(self, serial_Connection):
+    def __init__(self, serial_connection):
 
-        self.FSESC = serial.Serial(serial_Connection, 115200, timeout=0.1)
+        self.FSESC = serial_connection
 
         self.current = 0
 
@@ -33,12 +34,12 @@ class Motor:
         self.active = True
         self.delta = 1
 
-        self.current_Time = time.time()
-        self.previous_Time = time.time()
+        self.current_time = time.time()
+        self.previous_time = time.time()
 
         pass
 
-    def kill(self):
+    def __del__(self):
         self.active = False
         pass
 
@@ -46,21 +47,21 @@ class Motor:
     def run(self):
         while self.active:
 
-            self.current_Time = time.time()
-            if (self.previous_Time != self.current_Time):
+            self.current_time = time.time()
+            if (self.previous_time != self.current_time):
 
                 print("Current: ", self.current)
-                self.FSESC.write(self.current_Packet(self.current))
+                self.FSESC.write(self.current_packet(self.current))
 
                 self.FSESC.flush()
 
-                self.previous_Time = time.time()
+                self.previous_time = time.time()
 
-    def set_Current(self, value):
+    def set_current(self, value):
         self.current = value
         pass
 
-    def current_Packet(self, value) -> bytes:
+    def current_packet(self, value) -> bytes:
 
         message = pyvesc.SetCurrent(value)
         packet = pyvesc.encode(message)

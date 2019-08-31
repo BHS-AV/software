@@ -6,32 +6,37 @@ from control_scheme.Servo import Servo
 from test_cases.serial_port_picker import select_Port
 
 
+import serial
 import time
 
 def main():
 
-    port = serial.Serial('COM8', 115200, timeout=0.1)
+
+    port_string = select_Port()
+    servo_port = serial.Serial(port_string, 9600, timeout=0.1)
+
 
     #motor = Motor(port)
-    servo = Servo(port)
+    servo = Servo(servo_port)
 
     #motor.run()
 
 
-    #motor.set_Current(2900)
-    servo.set_Steering(100)
+    #motor.set_current(2900)
+    servo.set_steering(100)
+
 
 
     x = 60
     while x<140:
         x += 10
-        servo.set_Steering(x)
+        servo.set_steering(x)
         time.sleep(0.1)
 
-    #ime.sleep(5)
+   #time.sleep(5)
 
-    #motor.kill()
-    servo.kill()
+    #del motor
+    del servo
 
     return
 
