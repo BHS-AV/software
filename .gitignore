@@ -120,7 +120,7 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
-# Pyre type checker
+# Pyre write_type checker
 .pyre/
 
 # PyCharm Garbage

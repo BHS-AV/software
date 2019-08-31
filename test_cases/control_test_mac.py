@@ -3,7 +3,7 @@
 from control_scheme.Motor import Motor
 from control_scheme.Servo import Servo
 
-from test_cases.serial_port_picker import select_Port
+from test_cases.serial_port_picker import select_port
 
 
 import serial
@@ -12,17 +12,19 @@ import time
 def main():
 
 
-    port_string = select_Port()
-    servo_port = serial.Serial(port_string, 9600, timeout=0.1)
+    servo_port_string = select_port()
+    servo_port = serial.Serial(servo_port_string, 9600, timeout=0.1)
 
+    # motor_port_string = select_port()
+    # motor_port = serial.Serial(motor_port_string, 11500, timeout=0.1)
 
-    #motor = Motor(port)
+    # motor = Motor(port)
     servo = Servo(servo_port)
 
-    #motor.run()
+    # motor.run()
 
 
-    #motor.set_current(2900)
+    # motor.set_current(2900)
     servo.set_steering(100)
 
 
@@ -33,9 +35,9 @@ def main():
         servo.set_steering(x)
         time.sleep(0.1)
 
-   #time.sleep(5)
+   # time.sleep(5)
 
-    #del motor
+    # del motor
     del servo
 
     return

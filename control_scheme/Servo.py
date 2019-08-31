@@ -43,14 +43,14 @@ class Servo:
 
         print("Successful Destruction")
 
-    def set_steering(self, Value: int, Delta=None):
+    def set_steering(self, value: int, delta=None):
 
         # Self Explanatory
-        self.angle_value = Value
+        self.angle_value = value
         self.nano.write(self.build_packet('S', self.angle_value))
         # TODO: Smoother Angle Changes Testing
-        if (Delta):
-            self.angle_smoothing = Delta
+        if (delta):
+            self.angle_smoothing = delta
             self.nano.write(self.build_packet('s', self.angle_smoothing))
 
     def read_angle(self) -> int:
@@ -58,14 +58,19 @@ class Servo:
         self.nano.write('r00'.encode())
         return int(self.nano.readline().decode())
 
-    def build_packet(self, char, value):
+    @staticmethod
+    def build_packet(write_type, value):
+        """
+        :type write_type: Char
+        :type value: Int
+        """
         # split the byte in half
         # EX: 0010 0001 0100 0010 -> 0010 0001 and 0100 0010
         # Done to streamline sending the bytes to arduino and allow for numbers above 255.
-        self.Low = (value >> 8) & 0xFF
-        self.High = value & 0xFF
+        low = (value >> 8) & 0xFF
+        high = value & 0xFF
 
         # Builds byte array out of the character in binary format and the two bytes above
-        self.Packet = bytes([ord(char), self.Low, self.High])
+        packet = bytes([ord(write_type), low, high])
 
-        return self.Packet
+        return packet

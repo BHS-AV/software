@@ -25,11 +25,13 @@ def threaded(fn):
 class Motor:
 
     def __init__(self, serial_connection):
+        """
 
+        :type serial_connection: Serial Object
+        """
         self.FSESC = serial_connection
 
         self.current = 0
-
 
         self.active = True
         self.delta = 1
@@ -48,21 +50,19 @@ class Motor:
         while self.active:
 
             self.current_time = time.time()
-            if (self.previous_time != self.current_time):
-
+            if self.current_time != self.previous_time:
                 print("Current: ", self.current)
                 self.FSESC.write(self.current_packet(self.current))
                 self.FSESC.flush()
-
                 self.previous_time = time.time()
 
     def set_current(self, value):
         self.current = value
         pass
 
-    def current_packet(self, value) -> bytes:
+    @staticmethod
+    def current_packet(value) -> bytes:
 
         message = pyvesc.SetCurrent(value)
         packet = pyvesc.encode(message)
         return packet
-
