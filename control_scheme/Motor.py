@@ -52,7 +52,6 @@ class Motor:
 
                 print("Current: ", self.current)
                 self.FSESC.write(self.current_packet(self.current))
-
                 self.FSESC.flush()
 
                 self.previous_time = time.time()
