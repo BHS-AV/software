@@ -1,7 +1,10 @@
 
-from control_scheme.SpeedController import Motor
-from control_scheme.SteerController import Servo
-import serial
+
+from control_scheme.Motor import Motor
+from control_scheme.Servo import Servo
+
+from test_cases.serial_port_picker import select_Port
+
 
 import time
 

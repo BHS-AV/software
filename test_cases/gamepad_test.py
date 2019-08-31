@@ -1,5 +1,5 @@
-from control_scheme.SpeedController import Motor
-from control_scheme.SteerController import Servo
+from control_scheme.Motor import Motor
+from control_scheme.Servo import Servo
 import serial
 import inputs
 import time
