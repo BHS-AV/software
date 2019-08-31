@@ -19,8 +19,8 @@ class Servo:
 
         except(FileNotFoundError, serial.SerialException):
 
-            print("Serial Port Unavailable Initialisation Failed... Your Codes About to Go To Shit")
-            return
+            raise Exception("COULD NOT CONNECT TO NANO")
+
 
         time.sleep(4)
 
@@ -30,7 +30,7 @@ class Servo:
         self.set_steering(self.angle_value)
 
         # If nothing catches fire you'll get here.
-        print(" Successful initialisation")
+        print("Nano Connected")
 
     # If you unplug it, it goes to neutral
     def __del__(self):
@@ -41,13 +41,17 @@ class Servo:
         # Close Port so no longer connected.
         self.nano.close()
 
-        print("Successful Destruction")
+        print("Nano Disconnected")
 
     def set_steering(self, value: int, delta=None):
 
         # Self Explanatory
         self.angle_value = value
-        self.nano.write(self.build_packet('S', self.angle_value))
+        try:
+            self.nano.write(self.build_packet('S', self.angle_value))
+        except:
+            raise Exception("COULD NOT CONNECT TO NANO")
+
         # TODO: Smoother Angle Changes Testing
         if (delta):
             self.angle_smoothing = delta
@@ -55,18 +59,26 @@ class Servo:
 
     def read_angle(self) -> int:
 
-        self.nano.write('r00'.encode())
+        try:
+            self.nano.write('r00'.encode())
+        except:
+            raise Exception("COULD NOT CONNECT TO NANO")
+
         return int(self.nano.readline().decode())
 
     @staticmethod
-    def build_packet(write_type, value):
+    def build_packet(write_type, value) -> bytes:
         """
-        :type write_type: Char
-        :type value: Int
+         split the byte in half
+         EX: 0010 0001 0100 0010 -> 0010 0001 and 0100 0010
+         Done to streamline sending the bytes to arduino and allow for numbers above 255.
+
+        :param write_type: Char
+        :param value: Int
+        :return: Bytes
+
         """
-        # split the byte in half
-        # EX: 0010 0001 0100 0010 -> 0010 0001 and 0100 0010
-        # Done to streamline sending the bytes to arduino and allow for numbers above 255.
+
         low = (value >> 8) & 0xFF
         high = value & 0xFF
 

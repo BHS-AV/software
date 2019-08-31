@@ -29,7 +29,10 @@ class Motor:
 
         :type serial_connection: Serial Object
         """
-        self.FSESC = serial_connection
+        try:
+            self.FSESC = serial_connection
+        except:
+            raise Exception('COULD NOT CONNECT TO FSESC')
 
         self.current = 0
 
@@ -39,7 +42,7 @@ class Motor:
         self.current_time = time.time()
         self.previous_time = time.time()
 
-        pass
+        print("FSESC Connected")
 
     def __del__(self):
         self.active = False
@@ -52,8 +55,11 @@ class Motor:
             self.current_time = time.time()
             if self.current_time != self.previous_time:
                 print("Current: ", self.current)
-                self.FSESC.write(self.current_packet(self.current))
-                self.FSESC.flush()
+                try:
+                    self.FSESC.write(self.current_packet(self.current))
+                    self.FSESC.flush()
+                except:
+                    raise Exception("COULD NOT WRITE TO FSESC")
                 self.previous_time = time.time()
 
     def set_current(self, value):

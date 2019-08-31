@@ -82,6 +82,9 @@ void loop() {
       case 's':
         Steering.setDelta(argument);
          break;
+      case 'r':
+        Serial.println(Steering.readPhysical());
+        break;
       
     }
 

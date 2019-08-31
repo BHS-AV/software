@@ -21,6 +21,7 @@ def main():
     # motor = Motor(port)
     servo = Servo(servo_port)
 
+    Servo.build_packet('T',5)
     # motor.run()
 
 
@@ -31,9 +32,10 @@ def main():
 
     x = 60
     while x<140:
-        x += 10
+        x += 1
         servo.set_steering(x)
         time.sleep(0.1)
+        print("Angle Read Directly: ", servo.read_angle())
 
    # time.sleep(5)
 
