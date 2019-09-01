@@ -30,9 +30,9 @@ def main():
 
 
 
-    x = 60
-    while x<140:
-        x += 1
+    x = 65
+    while x<135:
+        x += 2
         servo.set_steering(x)
         time.sleep(0.1)
         print("Angle Read Directly: ", servo.read_angle())

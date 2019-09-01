@@ -35,11 +35,14 @@ class Servo:
     # If you unplug it, it goes to neutral
     def __del__(self):
 
-        # self.buildPacket is explained in the update function bellow.
-        self.nano.write(self.build_packet('S', 90))
+        try:
+            self.nano.write(self.build_packet('S', 90))
+            # Close Port so no longer connected.
+            self.nano.close()
+        except:
+            raise Exception("COULD NOT CONNECT")
 
-        # Close Port so no longer connected.
-        self.nano.close()
+
 
         print("Nano Disconnected")
 
@@ -61,10 +64,11 @@ class Servo:
 
         try:
             self.nano.write('r00'.encode())
+            return int(self.nano.readline().decode())
         except:
             raise Exception("COULD NOT CONNECT TO NANO")
 
-        return int(self.nano.readline().decode())
+
 
     @staticmethod
     def build_packet(write_type, value) -> bytes:
