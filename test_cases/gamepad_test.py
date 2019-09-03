@@ -1,5 +1,5 @@
-from control_scheme.SpeedController import Motor
-from control_scheme.SteerController import Servo
+from control_scheme.Motor import Motor
+from control_scheme.Servo import Servo
 import serial
 import inputs
 import time
@@ -83,7 +83,17 @@ if __name__ == '__main__':
     motor = Motor(port)
     servo = Servo(port)
     loop = motor.run()
+
     #motor.set_Current(4000)
     gamepad = Gamepad(motor, servo)
+
+    # Sorry Mithul there was some merge conflicts with this from my branch
+    # I'm not sure how to resolve them as I haven't really been looking at this code
+    # I hope I didn't ruin anything.
+
+    motor.set_current(2500)
+    servo.set_steering(30)
+    gamepad = inputs.devices.gamepads[0]
+    var = 2500
     while 1:
         gamepad.process_all_events()

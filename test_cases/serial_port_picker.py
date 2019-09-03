@@ -1,6 +1,6 @@
 import serial.tools.list_ports
 
-def select_Port():
+def select_port():
     ports = serial.tools.list_ports.comports()
 
     print("Select a serial port: ")
@@ -18,5 +18,3 @@ def select_Port():
             print("Invalid input")
 
     return str(ports[selected][0])
-
-print(select_Port())
