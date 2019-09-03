@@ -48,22 +48,28 @@ class Gamepad(object):
     # Handles joyStick Command with CommandMap
     def handle_joystick_event(self, js_event):
         state = js_event.state
-        if js_event.code == 'ABS_RZ':
+        code = js_event.code
+        if code == 'ABS_RZ':
             if state != 0:
                 var = int((state / 255 * 4000) + 4000)
             else:
                 var = 0
-        elif js_event.code == 'ABS_Z':
+        elif code == 'ABS_Z':
             if state != 0:
                 var = -int((state / 255 * 4000) + 4000)
             else:
                 var = 0
+        elif code == 'ABS_RX':
+            var = int((state/32767) * 30 + 90)
+            self.servo.set_steering(var)
+            print(var)
         else:
             var = 0
-        self.motor.set_Current(var)
+        #self.motor.set_Current(var)
+        #self.servo.set_steering(var)
         var = 0
-        # vprint (js_event.code)
-        print(js_event.state)
+        #print(js_event.code)
+        #print(js_event.state)
         #print(var)
         return
 
@@ -79,21 +85,15 @@ class Gamepad(object):
 
 
 if __name__ == '__main__':
-    port = serial.Serial('COM8', 115200, timeout=0.1)
-    motor = Motor(port)
+    port = serial.Serial('COM6', 9600, timeout=0.1)
+    #motor = Motor(port)
     servo = Servo(port)
-    loop = motor.run()
-
+    #loop = motor.run()
+    servo.set_steering(120)
+    time.sleep(5)
     #motor.set_Current(4000)
-    gamepad = Gamepad(motor, servo)
+    gamepad = Gamepad(None, servo)
 
-    # Sorry Mithul there was some merge conflicts with this from my branch
-    # I'm not sure how to resolve them as I haven't really been looking at this code
-    # I hope I didn't ruin anything.
-
-    motor.set_current(2500)
-    servo.set_steering(30)
-    gamepad = inputs.devices.gamepads[0]
     var = 2500
     while 1:
         gamepad.process_all_events()
