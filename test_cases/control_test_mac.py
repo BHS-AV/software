@@ -36,8 +36,23 @@ def main():
         servo.set_steering(x)
         time.sleep(0.1)
         print("Angle Read Directly: ", servo.read_angle())
+    while x>65:
+        x -= 2
+        servo.set_steering(x)
+        time.sleep(0.1)
+        print("Angle Read Directly: ", servo.read_angle())
+    while x < 135:
+        x += 2
+        servo.set_steering(x)
+        time.sleep(0.1)
+        print("Angle Read Directly: ", servo.read_angle())
+    while x > 65:
+        x -= 2
+        servo.set_steering(x)
+        time.sleep(0.1)
+        print("Angle Read Directly: ", servo.read_angle())
 
-   # time.sleep(5)
+    # time.sleep(5)
 
     # del motor
     del servo
