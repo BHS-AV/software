@@ -45,7 +45,8 @@ class Gamepad(object):
         if event.ev_type == 'Absolute':
             if event.code in ['ABS_RX', 'ABS_RY', 'ABS_X', 'ABS_Y']:
                 self.handle_trigger_event(event)
-            self.handle_joystick_event(event)
+            else:
+                self.handle_joystick_event(event)
 
     # Handles trigger_event
     def handle_trigger_event(self, trigger_event):
