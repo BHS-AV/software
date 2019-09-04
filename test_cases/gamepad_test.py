@@ -51,10 +51,12 @@ class Gamepad(object):
     # Handles trigger_event
     def handle_trigger_event(self, trigger_event):
         global steer_ang
+        #steer_ang = 0
         state = trigger_event.state
         code = trigger_event.code
         if code == 'ABS_RX':
             steer_ang = int((state/32767) * 30 + 90)
+            print(steer_ang)
         self.servo.set_steering(steer_ang)
         return
 
@@ -73,7 +75,8 @@ class Gamepad(object):
                 current = -int((state / 255 * 4000) + 4000)
             else:
                 current = 0
-        #self.motor.set_current(current)
+        print(current)
+        self.motor.set_current(current)
         return
 
     # Handles button_event
@@ -88,15 +91,19 @@ class Gamepad(object):
 
 
 if __name__ == '__main__':
-    #servo_port = serial.Serial('COM6', 9600, timeout=0.1)
+    servo_port = serial.Serial('COM11', 9600, timeout=0.1)
     motor_port = serial.Serial('COM8', 11520, timeout=0.1)
     motor = Motor(motor_port)
-    #servo = Servo(servo_port)
+    servo = Servo(servo_port)
     loop = motor.run()
     #servo.set_steering(120)
     #motor.set_current(4000)
-    gamepad = Gamepad(motor, None)
+    gamepad = Gamepad(motor, servo)
+    servo_port.flush()
+    servo_port.flushOutput()
+    servo_port.flushInput()
 
-    var = 2500
+    time.sleep(3)
+
     while 1:
         gamepad.process_all_events()
