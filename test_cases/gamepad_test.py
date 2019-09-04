@@ -43,37 +43,39 @@ class Gamepad(object):
         if event.ev_type == 'Key':
             self.handle_button_event(event)
         if event.ev_type == 'Absolute':
+            if event.code in ['ABS_RX', 'ABS_RY', 'ABS_X', 'ABS_Y']:
+                self.handle_trigger_event(event)
             self.handle_joystick_event(event)
 
-    # Handles joyStick Command with CommandMap
+    # Handles trigger_event
+    def handle_trigger_event(self, trigger_event):
+        global steer_ang
+        state = trigger_event.state
+        code = trigger_event.code
+        if code == 'ABS_RX':
+            steer_ang = int((state/32767) * 30 + 90)
+        self.servo.set_steering(steer_ang)
+        return
+
+    # Handles jostick_event
     def handle_joystick_event(self, js_event):
+        global current
         state = js_event.state
         code = js_event.code
         if code == 'ABS_RZ':
             if state != 0:
-                var = int((state / 255 * 4000) + 4000)
+                current = int((state / 255 * 4000) + 4000)
             else:
-                var = 0
+                current = 0
         elif code == 'ABS_Z':
             if state != 0:
-                var = -int((state / 255 * 4000) + 4000)
+                current = -int((state / 255 * 4000) + 4000)
             else:
-                var = 0
-        elif code == 'ABS_RX':
-            var = int((state/32767) * 30 + 90)
-            self.servo.set_steering(var)
-            print(var)
-        else:
-            var = 0
-        #self.motor.set_Current(var)
-        #self.servo.set_steering(var)
-        var = 0
-        #print(js_event.code)
-        #print(js_event.state)
-        #print(var)
+                current = 0
+        #self.motor.set_current(current)
         return
 
-    # Handles button command with CommandMap
+    # Handles button_event
     def handle_button_event(self, btn_event):
         print(btn_event)
         return
@@ -85,14 +87,14 @@ class Gamepad(object):
 
 
 if __name__ == '__main__':
-    port = serial.Serial('COM6', 9600, timeout=0.1)
-    #motor = Motor(port)
-    servo = Servo(port)
-    #loop = motor.run()
-    servo.set_steering(120)
-    time.sleep(5)
-    #motor.set_Current(4000)
-    gamepad = Gamepad(None, servo)
+    #servo_port = serial.Serial('COM6', 9600, timeout=0.1)
+    motor_port = serial.Serial('COM8', 11520, timeout=0.1)
+    motor = Motor(motor_port)
+    #servo = Servo(servo_port)
+    loop = motor.run()
+    #servo.set_steering(120)
+    #motor.set_current(4000)
+    gamepad = Gamepad(motor, None)
 
     var = 2500
     while 1:
