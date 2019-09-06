@@ -44,7 +44,7 @@ class Motor:
 
         print("FSESC Connected")
 
-    def __del__(self):
+    def exit(self):
         self.active = False
         pass
 
