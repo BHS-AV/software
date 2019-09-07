@@ -43,31 +43,42 @@ class Gamepad(object):
         if event.ev_type == 'Key':
             self.handle_button_event(event)
         if event.ev_type == 'Absolute':
-            self.handle_joystick_event(event)
+            if event.code in ['ABS_RX', 'ABS_RY', 'ABS_X', 'ABS_Y']:
+                self.handle_trigger_event(event)
+            else:
+                self.handle_joystick_event(event)
 
-    # Handles joyStick Command with CommandMap
-    def handle_joystick_event(self, js_event):
-        state = js_event.state
-        if js_event.code == 'ABS_RZ':
-            if state != 0:
-                var = int((state / 255 * 4000) + 4000)
-            else:
-                var = 0
-        elif js_event.code == 'ABS_Z':
-            if state != 0:
-                var = -int((state / 255 * 4000) + 4000)
-            else:
-                var = 0
-        else:
-            var = 0
-        self.motor.set_Current(var)
-        var = 0
-        # vprint (js_event.code)
-        print(js_event.state)
-        #print(var)
+    # Handles trigger_event
+    def handle_trigger_event(self, trigger_event):
+        global steer_ang
+        # steer_ang = 0
+        state = trigger_event.state
+        code = trigger_event.code
+        if code == 'ABS_RX':
+            steer_ang = int((state / 32767) * 30 + 90)
+            print(steer_ang)
+        self.servo.set_steering(steer_ang)
         return
 
-    # Handles button command with CommandMap
+    # Handles jostick_event
+    def handle_joystick_event(self, js_event):
+        global current
+        state = js_event.state
+        code = js_event.code
+        if code == 'ABS_RZ':
+            if state != 0:
+                current = int((state / 255 * 4000) + 4000)
+            else:
+                current = 0
+        elif code == 'ABS_Z':
+            if state != 0:
+                current = -int((state / 255 * 4000) + 4000)
+            else:
+                current = 0
+        self.motor.set_current(current)
+        return
+
+    # Handles button_event
     def handle_button_event(self, btn_event):
         print(btn_event)
         return
@@ -79,21 +90,32 @@ class Gamepad(object):
 
 
 if __name__ == '__main__':
-    port = serial.Serial('COM8', 115200, timeout=0.1)
-    motor = Motor(port)
-    servo = Servo(port)
+
+    # Windows Ports
+    servo_port = serial.Serial('COM11', 9600, timeout=0.1)
+    motor_port = serial.Serial('COM8', 11520, timeout=0.1)
+
+    # Linux Ports
+    # servo_port = serial.Serial('COM11', 9600, timeout=0.1)
+    # motor_port = serial.Serial('COM8', 11520, timeout=0.1)
+
+    # Mac Ports
+    # servo_port = serial.Serial('COM11', 9600, timeout=0.1)
+    # motor_port = serial.Serial('COM8', 11520, timeout=0.1)
+
+    motor = Motor(motor_port)
+    servo = Servo(servo_port)
+
     loop = motor.run()
 
-    #motor.set_Current(4000)
     gamepad = Gamepad(motor, servo)
 
-    # Sorry Mithul there was some merge conflicts with this from my branch
-    # I'm not sure how to resolve them as I haven't really been looking at this code
-    # I hope I didn't ruin anything.
+    servo_port.flush()
+    servo_port.flushOutput()
+    servo_port.flushInput()
 
-    motor.set_current(2500)
-    servo.set_steering(30)
-    gamepad = inputs.devices.gamepads[0]
-    var = 2500
+    print('Initializing...')
+    time.sleep(3)
+
     while 1:
         gamepad.process_all_events()
