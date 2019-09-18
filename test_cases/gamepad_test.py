@@ -92,7 +92,7 @@ class Gamepad(object):
 if __name__ == '__main__':
 
     # Windows Ports
-    servo_port = serial.Serial('COM11', 9600, timeout=0.1)
+    #servo_port = serial.Serial('COM11', 9600, timeout=0.1)
     motor_port = serial.Serial('COM8', 11520, timeout=0.1)
 
     # Linux Ports
@@ -104,18 +104,13 @@ if __name__ == '__main__':
     # motor_port = serial.Serial('COM8', 11520, timeout=0.1)
 
     motor = Motor(motor_port)
-    servo = Servo(servo_port)
+    #servo = Servo(servo_port)
 
     loop = motor.run()
 
-    gamepad = Gamepad(motor, servo)
-
-    servo_port.flush()
-    servo_port.flushOutput()
-    servo_port.flushInput()
+    gamepad = Gamepad(motor, None)
 
     print('Initializing...')
-    time.sleep(3)
 
     while 1:
         gamepad.process_all_events()

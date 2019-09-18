@@ -1,3 +1,5 @@
+import time
+
 import serial
 
 imu_data_template = {
@@ -11,7 +13,7 @@ imu_data_template = {
 }
 
 
-class IMU:
+class IMUHandler:
     def __init__(self, serial_port):
         self.serial_port = serial_port
         self.imu_com = serial.Serial(serial_port, 115200, timeout=1)
@@ -58,5 +60,8 @@ class IMU:
 
 
 if __name__ == '__main__':
-    handler = IMU('COM7')
+    handler = IMUHandler('COM7')
     print(handler.read_data())
+    while 1:
+        print(handler.read_data())
+        time.sleep(1)
