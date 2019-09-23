@@ -34,7 +34,8 @@ class Motor:
         except:
             raise Exception('COULD NOT CONNECT TO FSESC')
 
-        self.current = 0
+
+        self.duty_cycle = 0
 
         self.active = True
         self.delta = 1
@@ -46,7 +47,7 @@ class Motor:
 
     def exit(self):
         self.active = False
-        pass
+
 
     @threaded
     def run(self):
@@ -54,21 +55,22 @@ class Motor:
 
             self.current_time = time.time()
             if self.current_time != self.previous_time:
-                print("Current: ", self.current)
+
                 try:
-                    self.FSESC.write(self.current_packet(self.current))
+                    self.FSESC.write(self.duty_cycle_packet(self.duty_cycle))
                     self.FSESC.flush()
                 except:
                     raise Exception("COULD NOT WRITE TO FSESC")
                 self.previous_time = time.time()
 
-    def set_current(self, value):
-        self.current = value
-        pass
+
+
+    def set_duty_cycle(self, value):
+        self.duty_cycle = value
 
     @staticmethod
-    def current_packet(value) -> bytes:
+    def duty_cycle_packet(value) -> bytes:
 
-        message = pyvesc.SetCurrent(value)
+        message = pyvesc.SetDutyCycle(value)
         packet = pyvesc.encode(message)
         return packet
