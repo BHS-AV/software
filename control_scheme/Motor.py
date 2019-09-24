@@ -36,6 +36,7 @@ class Motor:
 
 
         self.duty_cycle = 0
+        self.neutral = 5000
 
         self.active = True
         self.delta = 1
@@ -57,7 +58,8 @@ class Motor:
             if self.current_time != self.previous_time:
 
                 try:
-                    self.FSESC.write(self.duty_cycle_packet(self.duty_cycle))
+                    print("Duty Cycle", self.duty_cycle)
+                    self.FSESC.write(Motor.duty_cycle_packet(self.duty_cycle))
                     self.FSESC.flush()
                 except:
                     raise Exception("COULD NOT WRITE TO FSESC")
@@ -67,6 +69,15 @@ class Motor:
 
     def set_duty_cycle(self, value):
         self.duty_cycle = value
+
+    def handle_duty_cycle(self, value):
+
+        applied_Neutral = round(self.neutral*(value / abs(value)))
+        calculated_Duty_Cycle = value + applied_Neutral
+        print(calculated_Duty_Cycle)
+        self.set_duty_cycle(calculated_Duty_Cycle)
+
+
 
     @staticmethod
     def duty_cycle_packet(value) -> bytes:
