@@ -1,8 +1,8 @@
 // Benjamin S. Bussell
 // February 26, 2019
 
-#ifndef Motor_h
-#define Motor_h
+#ifndef Traxxas_h
+#define Traxxas_h
 
 #include "Arduino.h"
 #include <Servo.h>
@@ -10,7 +10,7 @@
 
 
 
-class Motor {
+class Traxxas {
 
 private:
 
@@ -25,9 +25,9 @@ private:
 
 public:
 
-    Motor(int Pin, int Throttle, int Delta, int Value, int Goal):
+    Traxxas(int Pin, int Throttle, int Delta, int Value, int Goal):
         pin (Pin), throttle (Throttle), delta ( Delta), value ( Value), goal ( Goal){};
-    ~Motor();
+    ~Traxxas();
     void refresh();
     void startup();
     void executeArmingSequence();

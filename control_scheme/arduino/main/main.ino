@@ -8,17 +8,17 @@
 #include "Arduino.h"
 #include <Servo.h>
 
-#include <Motor.h>
+#include <Traxxas.h>
 // Custom Library made to abstract the code helping readability.
-// Can be found in Motor folder
+// Can be found in Traxxas folder
 // If modified needs to be recompiled from Sketch > Include Library > Add .ZIP Library
 // Might need to rename the folder, just add one version number to the name.
 
 
 
 
-// Motor object(pin, throttle,delta, value, goal)
-Motor Steering(9, 1, 1, 90, 90);
+// Traxxas object(pin, throttle,delta, value, goal)
+Traxxas Steering(9, 1, 1, 90, 90);
 
 
 
@@ -35,7 +35,7 @@ void setup() {
   
 
   
-  // Initalize the motors.
+  // Initalize the Traxxass.
   Steering.startup();
 
 

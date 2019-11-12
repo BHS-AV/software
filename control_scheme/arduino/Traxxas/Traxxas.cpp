@@ -3,14 +3,14 @@
 // February 26, 2019
 
 #include "Arduino.h"
-#include "Motor.h"
+#include "Traxxas.h"
 #include <Servo.h>
 
-Motor::~Motor () {
+Traxxas::~Traxxas () {
 
 }
 
-void Motor::refresh() {
+void Traxxas::refresh() {
     // Smoothing with Deltas to prevent sudden increase
     int error = goal - value;
     int sign = abs(error) / error;
@@ -27,7 +27,7 @@ void Motor::refresh() {
 
 }
 
-void Motor::startup() {
+void Traxxas::startup() {
     
     serv.attach(pin);
     
@@ -35,19 +35,19 @@ void Motor::startup() {
 
 
 
-void Motor::setGoal( unsigned int argument) {
+void Traxxas::setGoal( unsigned int argument) {
   // TODO: Implement Error Checking to prevent from inappropriate Arguments
-  //       Ex: if argument is out of range of motors or something dumb.
+  //       Ex: if argument is out of range of Traxxass or something dumb.
   goal = argument;
 }
 
-void Motor::setDelta( unsigned int value) {
+void Traxxas::setDelta( unsigned int value) {
 
   delta = value;
   //Serial.print(delta);
 }
 
-int Motor::loadServoValue() {
+int Traxxas::loadServoValue() {
     int val;
     for ( int address = 0; address < sizeof(int); address++)
       val = (val + EEPROM.read(address)) << 8;
@@ -55,14 +55,14 @@ int Motor::loadServoValue() {
     return val;
 }
 
-void Motor::storeServoValue() {
+void Traxxas::storeServoValue() {
   for(int address = 0; address < sizeof(int); address++) {
     byte val = (value >> (8*(sizeof(int) - address - 1))) & 255;
     EEPROM.write(address, val);
   }
 }
 
-unsigned int Motor::readPhysical() {
+unsigned int Traxxas::readPhysical() {
 
   if (!angleBased)
     return serv.readMicroseconds();
