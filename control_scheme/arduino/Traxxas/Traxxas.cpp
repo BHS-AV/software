@@ -22,15 +22,15 @@ void Traxxas::refresh() {
     else
       value = goal;
 
-    
+
     serv.write(value);
 
 }
 
 void Traxxas::startup() {
-    
+
+    serv.write(90);
     serv.attach(pin);
-    
 }
 
 
