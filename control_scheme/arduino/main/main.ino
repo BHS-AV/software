@@ -32,16 +32,16 @@ unsigned long prevTime;
 // I initalized variable above so that they are included in the Global scope
 void setup() {
 
-  
 
-  
+
+
   // Initalize the Traxxass.
   Steering.startup();
 
 
   // Initalize ports and make sure they are working, code will not run until they do
   Serial.begin(9600);
-  
+
   while (!Serial) {
     ;
   }
@@ -57,7 +57,7 @@ void loop() {
 
   // Make sure time has passed since last loop, to prevent weird stacking issues
   if ( prevTime != time ) {
-    
+
     Steering.refresh();
     prevTime = time;
   }
@@ -69,12 +69,12 @@ void loop() {
     // Byte 2 - High Value
     // Byte 3 - Low Value
     // Read the IO Port
-    
+
     char instruction = Serial.read();
     unsigned int argument = parseBytes(); // Parse Bytes reads the two bytes sent and merges them to a 16 bit int
-    
+
     // 3/6/2019 - Added lower case for changing Delta with the Arduino
-    
+
     switch(instruction) {
       case 'S':
         Steering.setGoal(argument);
@@ -85,19 +85,24 @@ void loop() {
       case 'r':
         Serial.println(Steering.readPhysical());
         break;
-      
+
+    }
+
+    while (Serial.avaliable() > 0) {
+
+      Serial.read();
     }
 
   }
-  
+
   // Set finish time for use above.
-  
+
 }
 
 int parseBytes() {
-  
+
   byte high = Serial.read();
   byte low  = Serial.read();
-  
+
   return high * 256 + low;
 }
