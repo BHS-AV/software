@@ -88,7 +88,7 @@ void loop() {
 
     }
 
-    while (Serial.avaliable() > 0) {
+    while (Serial.available() > 0) {
 
       Serial.read();
     }
