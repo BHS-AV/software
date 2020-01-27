@@ -18,7 +18,7 @@
 
 
 // Traxxas object(pin, throttle,delta, value, goal)
-Traxxas Steering(9, 1, 1, 90, 90);
+Traxxas Steering(9, 1, 1, 0, 90);
 
 
 
@@ -34,7 +34,7 @@ void setup() {
 
 
 
-
+  
   // Initalize the Traxxass.
   Steering.startup();
 

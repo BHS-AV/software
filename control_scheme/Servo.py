@@ -52,6 +52,9 @@ class Servo:
         self.angle_value = value
         try:
             self.nano.write(self.build_packet('S', self.angle_value))
+
+            self.read_angle()
+            # It breaks if you remove this line...
         except:
             raise Exception("COULD NOT CONNECT TO NANO")
 
