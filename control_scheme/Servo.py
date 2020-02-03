@@ -36,7 +36,7 @@ class Servo:
     def __del__(self):
 
         try:
-            self.nano.write(self.build_packet('S', 90))
+            self.nano.write('d00'.encode())
             # Close Port so no longer connected.
             self.nano.close()
         except:

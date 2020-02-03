@@ -21,7 +21,8 @@ private:
   int value;
   int goal;
 
-  bool angleBased = true;
+  bool active = false;
+
 
 public:
 
@@ -30,7 +31,7 @@ public:
     ~Traxxas();
     void refresh();
     void startup();
-    void executeArmingSequence();
+    void shutDown();
 
     void setGoal(unsigned int argument);
     void setDelta(unsigned int value);

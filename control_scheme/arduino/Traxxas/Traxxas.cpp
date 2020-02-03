@@ -11,6 +11,9 @@ Traxxas::~Traxxas () {
 }
 
 void Traxxas::refresh() {
+
+    if (!active) { return;}
+
     // Smoothing with Deltas to prevent sudden increase
     int error = goal - value;
     int sign = abs(error) / error;
@@ -30,14 +33,29 @@ void Traxxas::refresh() {
 void Traxxas::startup() {
 
     serv.write(90);
+    
     serv.attach(pin);
+    serv.write(90);
+    active = true;
+}
+
+void Traxxas::shutDown() {
+
+  serv.write(90);
+  delay(500);
+  serv.detach();
+  active = false;
 }
 
 
 
 void Traxxas::setGoal( unsigned int argument) {
   // TODO: Implement Error Checking to prevent from inappropriate Arguments
-  //       Ex: if argument is out of range of Traxxass or something dumb.
+  //       Ex: if argument is out of range of Traxxas or something dumb.
+  
+  goal = (goal > 130) ? 130 : goal;
+  goal = (goal < 53 ) ? 53 : goal;
+
   goal = argument;
 }
 
@@ -64,9 +82,7 @@ void Traxxas::storeServoValue() {
 
 unsigned int Traxxas::readPhysical() {
 
-  if (!angleBased)
-    return serv.readMicroseconds();
-  else
-    return serv.read();
+  
+  return serv.read();
 
 }

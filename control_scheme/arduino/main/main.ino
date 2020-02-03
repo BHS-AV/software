@@ -85,6 +85,9 @@ void loop() {
       case 'r':
         Serial.println(Steering.readPhysical());
         break;
+      case 'd':
+        Steering.shutDown();
+        break;
 
     }
 
