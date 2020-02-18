@@ -33,6 +33,7 @@ void Traxxas::refresh() {
 void Traxxas::startup() {
 
     serv.write(90);
+
     
     serv.attach(pin);
     serv.write(90);
@@ -45,6 +46,7 @@ void Traxxas::shutDown() {
   delay(500);
   serv.detach();
   active = false;
+
 }
 
 

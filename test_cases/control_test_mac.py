@@ -30,6 +30,7 @@ def main():
 
 
 
+
     x = 130
     while x<130:
         x += 1
@@ -51,6 +52,7 @@ def main():
         servo.set_steering(x)
         print(x)
         input()
+
 
 
 
