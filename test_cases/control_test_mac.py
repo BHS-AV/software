@@ -26,26 +26,34 @@ def main():
 
 
     # motor.set_current(2900)
-    servo.set_steering(100)
+    #servo.set_steering(100)
 
 
 
-    x = 65
-    while x<135:
-        x += 3
+
+    x = 130
+    while x<130:
+        x += 1
         servo.set_steering(x)
-
-    while x>65:
-        x -= 3
+        print(x)
+        input()
+    while x>0:
+        x -= 1
         servo.set_steering(x)
-
-    while x < 135:
-        x += 3
+        print(x)
+        input()
+    while x<130:
+        x += 1
         servo.set_steering(x)
-
-    while x > 65:
-        x -= 3
+        print(x)
+        input()
+    while x>0:
+        x -= 1
         servo.set_steering(x)
+        print(x)
+        input()
+
+
 
 
 
